@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canal Seguro de Denúncias Anônimas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topo">
+    <div class="container">
+      <p class="tag">Sistema de Denúncias Anônimas</p>
+      <h1>Canal Seguro de Denúncias</h1>
+      <p class="subtitulo">
+        Este canal permite o registro de denúncias sem identificação pessoal obrigatória.
+        Use este espaço com responsabilidade e apenas para situações reais.
+      </p>
+      <div class="aviso" role="note">
+        Não informe dados pessoais sensíveis na descrição. Foque nos fatos, local e evidências.
+      </div>
+    </div>
+  </header>
+
+  <main class="container principal">
+    <section class="card" aria-labelledby="titulo-formulario">
+      <h2 id="titulo-formulario">Registrar denúncia anônima</h2>
+      <p class="texto-apoio">
+        Preencha os campos abaixo com o máximo de clareza. Após o envio, será gerado um protocolo para acompanhamento.
+      </p>
+
+      <form id="denunciaForm" novalidate>
+        <fieldset class="bloco-campos">
+          <legend>Categoria e subcategoria</legend>
+          <p class="ajuda-campo">
+            Selecione primeiro um grupo de categoria e depois a subcategoria correspondente.
+          </p>
+          <div id="gradeCategorias" class="grade-categorias" role="radiogroup" aria-label="Grupos de categorias"></div>
+
+          <div id="subcategoriaArea" class="subcategoria-area oculto">
+            <p class="titulo-subcategoria">Subcategorias da categoria selecionada</p>
+            <div id="subcategoriasContainer" class="chips-subcategoria" aria-live="polite"></div>
+          </div>
+
+          <input type="hidden" id="categoriaSelecionada" name="categoriaSelecionada" required>
+          <input type="hidden" id="subcategoriaSelecionada" name="subcategoriaSelecionada" required>
+        </fieldset>
+
+        <fieldset class="bloco-campos">
+          <legend>Detalhes da ocorrência</legend>
+
+          <label for="descricao">Descrição da denúncia</label>
+          <textarea
+            id="descricao"
+            name="descricao"
+            rows="6"
+            minlength="20"
+            maxlength="2500"
+            placeholder="Descreva o que aconteceu, quando ocorreu e quem está envolvido (sem informar seus dados pessoais)."
+            required
+          ></textarea>
+          <p class="ajuda-campo">Mínimo de 20 caracteres.</p>
+
+          <div class="grid-localizacao">
+            <div>
+              <label for="bairro">Bairro</label>
+              <input type="text" id="bairro" name="bairro" maxlength="120" required>
+            </div>
+            <div>
+              <label for="rua">Rua</label>
+              <input type="text" id="rua" name="rua" maxlength="180" required>
+            </div>
+          </div>
+
+          <label for="referencia">Ponto de referência</label>
+          <input
+            type="text"
+            id="referencia"
+            name="referencia"
+            maxlength="200"
+            placeholder="Ex.: próximo à praça central"
+            required
+          >
+        </fieldset>
+
+        <fieldset class="bloco-campos">
+          <legend>Evidências (simulado)</legend>
+          <label for="anexos">Anexar imagem, vídeo ou documento</label>
+          <input
+            type="file"
+            id="anexos"
+            name="anexos"
+            multiple
+            accept="image/*,video/*,.pdf,.doc,.docx,.txt,.odt"
+          >
+          <p class="ajuda-campo">
+            O envio é simulado no navegador: os arquivos não são enviados para servidor nesta versão estática.
+          </p>
+          <ul id="listaArquivos" class="lista-arquivos" aria-live="polite"></ul>
+        </fieldset>
+
+        <button type="submit" class="botao-principal">Enviar denúncia</button>
+      </form>
+
+      <div id="feedbackFormulario" class="feedback oculto" aria-live="polite"></div>
+
+      <section id="resultadoProtocolo" class="resultado-protocolo oculto" aria-live="polite">
+        <h3>Protocolo gerado com sucesso</h3>
+        <p>
+          Número do protocolo:
+          <strong id="protocoloGerado"></strong>
+        </p>
+        <p>Guarde este número para consultar o andamento da denúncia.</p>
+        <button type="button" id="btnDownloadPdf" class="botao-pdf">
+          Baixar comprovante em PDF
+        </button>
+      </section>
+    </section>
+
+    <section class="card" aria-labelledby="titulo-consulta">
+      <h2 id="titulo-consulta">Consultar status por protocolo</h2>
+      <p class="texto-apoio">
+        Informe o protocolo no formato <code>DEN-AAAA-000000</code>.
+      </p>
+
+      <form id="consultaForm" class="consulta-form">
+        <label for="protocoloConsulta">Protocolo</label>
+        <div class="linha-consulta">
+          <input type="text" id="protocoloConsulta" name="protocoloConsulta" placeholder="DEN-2026-000123" required>
+          <button type="submit" class="botao-secundario">Consultar</button>
+        </div>
+      </form>
+
+      <div id="feedbackConsulta" class="feedback oculto" aria-live="polite"></div>
+
+      <section id="resultadoConsulta" class="resultado-consulta oculto" aria-live="polite">
+        <h3>Resultado da consulta</h3>
+        <p><strong>Protocolo:</strong> <span id="consultaProtocolo"></span></p>
+        <p>
+          <strong>Status atual:</strong>
+          <span id="consultaStatus" class="badge-status"></span>
+        </p>
+        <p><strong>Categoria/Subcategoria:</strong> <span id="consultaCategoria"></span></p>
+        <p><strong>Local:</strong> <span id="consultaLocal"></span></p>
+        <p><strong>Criada em:</strong> <span id="consultaCriacao"></span></p>
+        <p><strong>Última atualização:</strong> <span id="consultaAtualizacao"></span></p>
+      </section>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="container">
+      <p>Canal Seguro de Denúncias Anônimas • Projeto web estático para fins educacionais.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
